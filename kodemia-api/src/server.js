@@ -3,10 +3,12 @@ const express = require('express')
 
 const server = express()
 const kodersRouter = require('./routers/koders')
+const mentorsRouter = require('./routers/mentors')
 //Middlewares
-// server.use(express.json()); //best use
+server.use(express.json()); 
 //Agregábamos los routers
 server.use('/koders', kodersRouter)
+server.use('/mentors', mentorsRouter)
 
 module.exports = server
 

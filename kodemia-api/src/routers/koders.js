@@ -2,8 +2,8 @@ const express = require('express')
 const router = express.Router()
 const koders = require('../usecases/koders')
 
-//middleware
-router.use(express.json());
+// middleware
+// router.use(express.json());
 
 router.get('/', async (request, response) => {
     try {
@@ -20,6 +20,28 @@ router.get('/', async (request, response) => {
         response.json({
             success: false,
             message: 'Error to get all koders',
+            error: error.message
+        })
+    }
+})
+
+router.get('/:id', async (request, response) => {
+    const { id } = request.params
+
+    try{
+        const getKoder = await koders.getByID(id)
+        response.json({
+                success: true, 
+                message: "Here is the koder",
+                data: {
+                    mentor: getKoder
+                }
+            })
+    } catch (error){
+        response.status(400)
+        response.json({
+            success: false,
+            message: 'Error to get koder',
             error: error.message
         })
     }
@@ -67,6 +89,30 @@ router.delete('/:id', async (request, response) => {
         })
     }
     
+})
+
+router.patch('/:id', async (request, response) => {
+    try{
+        const { id } = request.params
+        const { body } = request
+        
+        const koderUpdated = await koders.updateById(id, body)
+
+        response.json({
+            success: true,
+            message: 'Koder updated!',
+            data: {
+                koder: koderUpdated
+            }
+        })
+    } catch (error){
+        response.status(400)
+        response.json({
+            success: false,
+            message: 'Error to update koder',
+            error: error.message
+        })
+    }
 })
 
 module.exports = router
